@@ -1,0 +1,33 @@
+import sys
+from unittest.mock import patch
+
+from django.core.exceptions import ImproperlyConfigured
+
+from db_helper.settings import Settings
+from tests.base import TestingBaseClass
+
+
+class TestSettings(TestingBaseClass):
+    """
+    Tests package settings.
+    """
+
+    @patch('db_helper.settings.settings')
+    def test_excess_input(self, setting):
+        """
+        Make sure we alert the user about excess settings, as this is most likely a mistake on their part.
+        """
+        setting.DB_HELPER = {'TEST': 'test'}
+        with self.assertRaisesRegexp(ImproperlyConfigured, '`TEST` is not a valid setting for DB_HELPER'):
+            Settings()
+
+    @patch('db_helper.settings.settings')
+    def test_debug_false(self, setting):
+        """
+        Make sure we alert the user when trying to run the program if DEBUG is false.
+        """
+        setting.DEBUG = False
+        if 'test' in sys.argv:
+            sys.argv.pop(sys.argv.index('test'))
+        with self.assertRaisesRegexp(ImproperlyConfigured, 'DB-helper should only run when DEBUG is True'):
+            Settings()
