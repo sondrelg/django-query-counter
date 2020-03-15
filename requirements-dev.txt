@@ -1,6 +1,4 @@
 # Testing
-pytest==5.4.1
-pytest-django==3.8.0
 coverage==5.0.3
 
 # Publish to pypi

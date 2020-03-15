@@ -1,0 +1,35 @@
+name: code coverage
+
+on:
+  push:
+    branches:
+      - master
+      - ci  # TODO: Remove
+
+jobs:
+  codecov:
+    name: Code coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Test with pytest
+        run: |
+          pytest --cov=django_qc --verbose --color=yes  --assert=plain --cov-report=xml
+          coverage report
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          yml: ./codecov.yml
+          fail_ci_if_error: true
