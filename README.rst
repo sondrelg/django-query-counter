@@ -2,6 +2,24 @@
 Django Query Count Helper
 #########################
 
+.. image:: https://img.shields.io/pypi/v/django-qc.svg
+    :target: https://pypi.org/project/django-qc/
+
+.. image:: https://img.shields.io/pypi/pyversions/django-qc.svg
+    :target: https://pypi.org/project/django-qc/
+
+.. image:: https://img.shields.io/pypi/djversions/django-qc.svg
+    :target: https://pypi.python.org/pypi/django-qc
+
+.. image:: https://codecov.io/gh/sondrelg/django-qc/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/sondrelg/django-qc
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://pypi.org/project/django-qc/
+
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :target: https://github.com/pre-commit/pre-commit
+
 This is a simple implementation of the `django_query_analyze` function detailed in
 `The Django Speed Handbook: making a Django app faster <https://openfolder.sh/django-faster-
 speed-tutorial?utm_campaign=Django%2BNewsletter&utm_medium=email&utm_source=Django_Newsletter_13>`_, featured in the
