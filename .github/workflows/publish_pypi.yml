@@ -1,4 +1,4 @@
-name: publish package to test-pypi and pypi
+name: publish package to pypi
 
 on:
   release:

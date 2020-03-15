@@ -11,8 +11,8 @@ Django Query Count Helper
 .. image:: https://img.shields.io/pypi/djversions/django-qc.svg
     :target: https://pypi.python.org/pypi/django-qc
 
-.. image:: https://codecov.io/gh/sondrelg/django-qc/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/sondrelg/django-qc
+.. image:: https://codecov.io/gh/sondrelg/django-query-counter/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/sondrelg/django-query-counter
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://pypi.org/project/django-qc/
