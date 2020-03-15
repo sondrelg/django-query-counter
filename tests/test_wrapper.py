@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from django.core.exceptions import ImproperlyConfigured
 
-from db_helper.core import db_helper
+from django_qc.core import db_helper
 from tests.base import TestingBaseClass
 from tests.models import Song
 
@@ -16,7 +16,7 @@ class TestWrapper(TestingBaseClass):
         with self.assertRaisesRegexp(ImproperlyConfigured, '`call_db` performs 13 queries, where we expected 1'):
             self.call(1)
 
-    @patch('db_helper.core.settings.RAISE_EXC', False)
+    @patch('django_qc.core.settings.RAISE_EXC', False)
     def test_correct_error_logging(self):
         """
         An exception logger should be logged if RAISE_EXC is False.
@@ -25,8 +25,8 @@ class TestWrapper(TestingBaseClass):
             self.call(1)
             self.assertIn('Function `call_db` performs 13 queries, where we expected 1', log.output[0])
 
-    @patch('db_helper.core.settings.RAISE_EXC', False)
-    @patch('db_helper.core.settings.LOG_EXC', False)
+    @patch('django_qc.core.settings.RAISE_EXC', False)
+    @patch('django_qc.core.settings.LOG_EXC', False)
     def test_warning_logging(self):
         """
         One warning logger should be raised if both settings are False.

@@ -6,7 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 class Settings(object):
     """
-    Reads and validates db_helper settings.
+    Reads and validates django_qc settings.
     """
 
     def __init__(self):

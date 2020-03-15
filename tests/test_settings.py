@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from django.core.exceptions import ImproperlyConfigured
 
-from db_helper.settings import Settings
+from django_qc.settings import Settings
 from tests.base import TestingBaseClass
 
 
@@ -12,7 +12,7 @@ class TestSettings(TestingBaseClass):
     Tests package settings.
     """
 
-    @patch('db_helper.settings.settings')
+    @patch('django_qc.settings.settings')
     def test_excess_input(self, setting):
         """
         Make sure we alert the user about excess settings, as this is most likely a mistake on their part.
@@ -21,7 +21,7 @@ class TestSettings(TestingBaseClass):
         with self.assertRaisesRegexp(ImproperlyConfigured, '`TEST` is not a valid setting for DB_HELPER'):
             Settings()
 
-    @patch('db_helper.settings.settings')
+    @patch('django_qc.settings.settings')
     def test_debug_false(self, setting):
         """
         Make sure we alert the user when trying to run the program if DEBUG is false.

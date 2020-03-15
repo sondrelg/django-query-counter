@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import TestCase
 
-from db_helper.core import db_helper
+from django_qc.core import db_helper
 from tests.models import CD, Song
 
 

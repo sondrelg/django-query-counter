@@ -1,3 +1,9 @@
+# Testing
 pytest==5.4.1
 pytest-django==3.8.0
 coverage==5.0.3
+
+# Publish to pypi
+setuptools==44.0.0
+twine==3.1.1
+wheel==0.33.6

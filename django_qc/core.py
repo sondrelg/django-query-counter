@@ -6,9 +6,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db import connection
 from django.db.backends.base.base import BaseDatabaseWrapper
 
-from db_helper.settings import settings
+from django_qc.settings import settings
 
-logger = logging.getLogger('db_helper')
+logger = logging.getLogger('django_qc')
 
 
 def db_helper(count: int):
