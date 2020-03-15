@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install django==3.0.4
           pip install -r requirements-dev.txt
-      - name: Test with pytest
+      - name: Test
         run: |
           coverage run manage.py test
           coverage xml
