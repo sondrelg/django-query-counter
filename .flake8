@@ -1,0 +1,25 @@
+[flake8]
+ignore=
+    TYP201
+    TYP002
+    F401
+    D100
+    D200
+    D107
+    E501
+    TYP003
+    D401
+    D104
+    TYP101
+
+exclude =
+    .git,
+    .idea,
+    __pycache__,
+    demo_project/*,
+    tests/*,
+    venv,
+    manage.py,
+
+
+max-complexity = 15
