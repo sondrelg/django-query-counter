@@ -13,7 +13,7 @@ class TestWrapper(TestingBaseClass):
         """
         Test that an n+1 error is caught and error is raised.
         """
-        with self.assertRaisesRegexp(ImproperlyConfigured, '`call_db` performs 13 queries, where we expected 1'):
+        with self.assertRaisesRegexp(ImproperlyConfigured, '`call_db` performed 13 queries, where we expected 1'):
             self.call(1)
 
     @patch('django_qc.core.settings.RAISE_EXC', False)
@@ -23,7 +23,7 @@ class TestWrapper(TestingBaseClass):
         """
         with self.assertLogs(level='ERROR') as log:
             self.call(1)
-            self.assertIn('Function `call_db` performs 13 queries, where we expected 1', log.output[0])
+            self.assertIn('Function `call_db` performed 13 queries, where we expected 1', log.output[0])
 
     @patch('django_qc.core.settings.RAISE_EXC', False)
     @patch('django_qc.core.settings.LOG_EXC', False)
@@ -33,7 +33,7 @@ class TestWrapper(TestingBaseClass):
         """
         with self.assertLogs(level='WARNING') as log:
             self.call(1)
-            self.assertIn('Function `call_db` performs 13 queries, where we expected 1', log.output[0])
+            self.assertIn('Function `call_db` performed 13 queries, where we expected 1', log.output[0])
             self.assertEqual(1, len(log.output))  # If more than 1, logging is incorrectly set up
 
     def test_exceeded_maximum_count(self):
