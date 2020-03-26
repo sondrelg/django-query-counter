@@ -3,7 +3,7 @@ from functools import wraps
 from typing import Callable
 
 from django.core.exceptions import ImproperlyConfigured
-from django.db import connection
+from django.db import connections
 from django.db.backends.base.base import BaseDatabaseWrapper
 
 from django_qc.settings import settings
@@ -26,13 +26,13 @@ def db_helper(count: int):
 
         @wraps(fn)
         def inner(*args, **kwargs):
-            query_count = len(connection.queries)
+            query_count = sum(len(connections[db_name].queries) for db_name in connections)
             fn(*args, **kwargs)
-            actual_count = len(connection.queries) - query_count
+            actual_count = sum(len(connections[db_name].queries) for db_name in connections) - query_count
 
             # If the amount of queries exceeds expectations
             if settings.DEBUG and actual_count != count:
-                error_msg = f'Function `{fn.__name__}` performs {actual_count} queries, where we expected {count}'
+                error_msg = f'Function `{fn.__name__}` performed {actual_count} queries, where we expected {count}'
                 if settings.RAISE_EXC:
                     raise ImproperlyConfigured(error_msg)
                 elif settings.LOG_EXC:
