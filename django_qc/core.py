@@ -27,7 +27,7 @@ def db_helper(count: int):
         @wraps(fn)
         def inner(*args, **kwargs):
             query_count = sum(len(connections[db_name].queries) for db_name in connections)
-            fn(*args, **kwargs)
+            output = fn(*args, **kwargs)
             actual_count = sum(len(connections[db_name].queries) for db_name in connections) - query_count
 
             # If the amount of queries exceeds expectations
@@ -40,6 +40,6 @@ def db_helper(count: int):
                 else:
                     logger.warning(error_msg)
 
+            return output
         return inner
-
     return outer
