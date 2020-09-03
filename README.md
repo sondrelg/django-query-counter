@@ -10,7 +10,7 @@
 
 Lets you easily identify ineffective queries by highlighting the number of queries made in your code; intended only as a development aid.
 
-![Query counter](https://raw.githubusercontent.com/sondrelg/django-query-counter/master/docs/comments.gif)
+![Query counter](https://raw.githubusercontent.com/sondrelg/django-query-counter/master/docs/comment.gif)
 
 Best paired with a [pre-commit hook for removing comments](https://github.com/sondrelg/remove-query-counts) before them to version control.
 
