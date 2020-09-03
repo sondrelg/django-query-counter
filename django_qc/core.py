@@ -39,7 +39,7 @@ def db_helper(verbose: bool = False):
         post_sum = sum(value for value in pre_call_query_counts.values())
 
         # Create comments
-        comment = f'function ran {pre_sum - post_sum} queries'
+        comment = f'function ran {pre_sum - post_sum} {"queries" if pre_sum - post_sum != 1 else "query"}'
         if verbose:
             query_sum_per_database_handler = {
                 k: (new - original)
