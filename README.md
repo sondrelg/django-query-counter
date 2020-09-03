@@ -11,7 +11,7 @@ Lets you easily catch and fix database query inefficiencies during development b
 
 ![Query counter](https://raw.githubusercontent.com/sondrelg/django-query-counter/master/docs/comments.gif)
 
-The only real drawback of getting updated query numbers in your code seems to be that it might receive a lot of attention during code reviews, so we recommend pairing it with a [pre-commit hook for removing the comments](https://github.com/sondrelg/remove-query-counts) before they are committed. If you're not familiar with [pre-commit](https://pre-commit.com/) it might be worth five minutes of your time to read up on.
+The main potential drawback of seeing query data in your code is that commits can become cluttered. We therefore recommend pairing django-qc with a [pre-commit hook for removing the comments](https://github.com/sondrelg/remove-query-counts) before they are ever even committed.
 
 ## Installation
 
