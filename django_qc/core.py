@@ -8,14 +8,15 @@ from django.db import connections
 logger = logging.getLogger('django_qc')
 
 
-def db_helper(verbose=False):
+def db_helper(verbose: bool = False):
     """
     Decorator function to count DB queries.
     """
     caller = getframeinfo(stack()[1][0])
     wrapper_line_number = caller.lineno - 1
 
-    def write_line_comment(pre_call_query_counts: Dict[str, int], post_call_query_counts: Dict[str, int]) -> str:
+    def write_line_comment(pre_call_query_counts: Dict[str, int], post_call_query_counts: Dict[str, int],
+                           function_name: str) -> str:
         """
         Writes a comment to the end of the line above the function definition.
         """
@@ -24,7 +25,14 @@ def db_helper(verbose=False):
             content = f.readlines()
 
         # Get the original line, minus any existing comments and newlines
-        original_line = content[wrapper_line_number].split("  #")[0].replace("\n", "")
+        original_comment = ''
+        try:
+            if len(content[wrapper_line_number].split('  # ')) != 0:
+                original_comment = content[wrapper_line_number].split('  # ')[1].replace('\n', '').strip()
+        except Exception as e:
+            logger.debug('Failed setting original comment. Error: %s', e)
+
+        original_line = content[wrapper_line_number].split('  #')[0].replace('\n', '')
 
         # Sum up the total amount of queries made during the function call
         pre_sum = sum(value for value in post_call_query_counts.values())
@@ -40,11 +48,13 @@ def db_helper(verbose=False):
             }
             comment += f' - details: {str(query_sum_per_database_handler)}'
 
-        content[wrapper_line_number] = f'{original_line}  # {comment}\n'
-
-        with open(caller.filename, 'w') as f:
-            f.write(''.join(content))
-
+        if comment.strip() != original_comment.strip():
+            content[wrapper_line_number] = f'{original_line}  # {comment}\n'
+            with open(caller.filename, 'w') as f:
+                f.write(''.join(content))
+            logger.info('Added comment `%s` above function %s', comment, function_name)
+        else:
+            logger.debug('Comment already exists for function %s', function_name)
         return comment
 
     def outer(fn: Callable):
@@ -57,8 +67,7 @@ def db_helper(verbose=False):
             pre_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
             output = fn(*args, **kwargs)
             post_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
-            comment = write_line_comment(pre_call_query_counts, post_call_query_counts)
-            logger.info('Added comment `%s` above function %s', comment, fn.__name__)
+            write_line_comment(pre_call_query_counts, post_call_query_counts, fn.__name__)
             return output
 
         return inner
