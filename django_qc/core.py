@@ -5,6 +5,8 @@ from typing import Callable, Dict
 
 from django.db import connections
 
+from django_qc.settings import settings
+
 logger = logging.getLogger('django_qc')
 
 
@@ -15,14 +17,18 @@ def db_helper(verbose: bool = False):
     caller = getframeinfo(stack()[1][0])
     wrapper_line_number = caller.lineno - 1
 
-    def write_line_comment(pre_call_query_counts: Dict[str, int], post_call_query_counts: Dict[str, int],
-                           function_name: str) -> str:
+    def write_line_comment(pre_call_query_counts: Dict[str, int], post_call_query_counts: Dict[str, int], function_name: str) -> None:
         """
         Writes a comment to the end of the line above the function definition.
         """
         # Read original content
-        with open(caller.filename, 'r') as f:
-            content = f.readlines()
+        try:
+            with open(caller.filename, 'r') as f:
+                content = f.readlines()
+        except OSError as e:
+            # When executing commands in terminal, caller.filename becomes <input>
+            logger.debug('Failed reading filepath. Error: %s', e)
+            return
 
         # Get the original line, minus any existing comments and newlines
         original_comment = ''
@@ -55,7 +61,6 @@ def db_helper(verbose: bool = False):
             logger.info('Added comment `%s` above function %s', comment, function_name)
         else:
             logger.debug('Comment already exists for function %s', function_name)
-        return comment
 
     def outer(fn: Callable):
         """
@@ -64,11 +69,14 @@ def db_helper(verbose: bool = False):
 
         @wraps(fn)
         def inner(*args, **kwargs):
-            pre_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
-            output = fn(*args, **kwargs)
-            post_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
-            write_line_comment(pre_call_query_counts, post_call_query_counts, fn.__name__)
-            return output
+            if settings.DEBUG:
+                pre_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
+                output = fn(*args, **kwargs)
+                post_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
+                write_line_comment(pre_call_query_counts, post_call_query_counts, fn.__name__)
+                return output
+            else:
+                return fn(*args, **kwargs)
 
         return inner
 

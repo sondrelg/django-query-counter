@@ -24,3 +24,5 @@ def prefetched_query():
 @db_helper()
 def just_one():
     _ = [cd.song.all().count() for cd in simple_query()]
+
+just_one()
