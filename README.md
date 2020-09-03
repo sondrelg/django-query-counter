@@ -6,9 +6,9 @@
 ![https://pypi.org/project/django-qc/](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![https://github.com/pre-commit/pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 
-## Django Query Counter - Simple query monitoring
+## Django Query Counter - simple query debugging
 
-Lets you easily identify ineffective queries by highlighting the number of queries made in your code; intended only as a development aid.
+Lets you easily catch and fix database query inefficiencies during development.
 
 ![Query counter](https://raw.githubusercontent.com/sondrelg/django-query-counter/master/docs/comment.gif)
 
