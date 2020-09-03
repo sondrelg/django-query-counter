@@ -17,7 +17,7 @@ class TestingBaseClass(TestCase):
         settings.DEBUG = True
 
     def call(self, count):
-        @db_helper()  # function ran 44 queriess
+        @db_helper()
         def call_db():
             songs = Song.objects.all()
             for song in songs:
