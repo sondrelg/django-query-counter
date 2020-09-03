@@ -1,23 +1,51 @@
 import logging
 from functools import wraps
-from typing import Callable
+from inspect import getframeinfo, stack
+from typing import Callable, Dict
 
-from django.core.exceptions import ImproperlyConfigured
 from django.db import connections
-from django.db.backends.base.base import BaseDatabaseWrapper
-
-from django_qc.settings import settings
 
 logger = logging.getLogger('django_qc')
 
 
-def db_helper(count: int):
+def db_helper(verbose=False):
     """
     Decorator function to count DB queries.
     """
-    # If the intended count of queries is higher than the max, connect.queries will reset.
-    if count > BaseDatabaseWrapper.queries_limit:
-        raise ImproperlyConfigured(f'Count cannot be higher than the max query limit of {BaseDatabaseWrapper.queries_limit}')
+    caller = getframeinfo(stack()[1][0])
+    wrapper_line_number = caller.lineno - 1
+
+    def write_line_comment(pre_call_query_counts: Dict[str, int], post_call_query_counts: Dict[str, int]) -> str:
+        """
+        Writes a comment to the end of the line above the function definition.
+        """
+        # Read original content
+        with open(caller.filename, 'r') as f:
+            content = f.readlines()
+
+        # Get the original line, minus any existing comments and newlines
+        original_line = content[wrapper_line_number].split("  #")[0].replace("\n", "")
+
+        # Sum up the total amount of queries made during the function call
+        pre_sum = sum(value for value in post_call_query_counts.values())
+        post_sum = sum(value for value in pre_call_query_counts.values())
+
+        # Create comments
+        comment = f'function ran {pre_sum - post_sum} queries'
+        if verbose:
+            query_sum_per_database_handler = {
+                k: (new - original)
+                for (k, original), (_, new)
+                in zip(pre_call_query_counts.items(), post_call_query_counts.items())
+            }
+            comment += f' - details: {str(query_sum_per_database_handler)}'
+
+        content[wrapper_line_number] = f'{original_line}  # {comment}\n'
+
+        with open(caller.filename, 'w') as f:
+            f.write(''.join(content))
+
+        return comment
 
     def outer(fn: Callable):
         """
@@ -26,20 +54,13 @@ def db_helper(count: int):
 
         @wraps(fn)
         def inner(*args, **kwargs):
-            query_count = sum(len(connections[db_name].queries) for db_name in connections)
+            pre_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
             output = fn(*args, **kwargs)
-            actual_count = sum(len(connections[db_name].queries) for db_name in connections) - query_count
-
-            # If the amount of queries exceeds expectations
-            if settings.DEBUG and actual_count != count:
-                error_msg = f'Function `{fn.__name__}` performed {actual_count} queries, where we expected {count}'
-                if settings.RAISE_EXC:
-                    raise ImproperlyConfigured(error_msg)
-                elif settings.LOG_EXC:
-                    logger.exception(error_msg)
-                else:
-                    logger.warning(error_msg)
-
+            post_call_query_counts = {k: len(connections[k].queries) for k in connections._databases.keys()}
+            comment = write_line_comment(pre_call_query_counts, post_call_query_counts)
+            logger.info('Added comment `%s` above function %s', comment, fn.__name__)
             return output
+
         return inner
+
     return outer
