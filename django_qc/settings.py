@@ -10,8 +10,6 @@ class Settings(object):
     """
 
     def __init__(self) -> None:
-        self.RAISE_EXC = True
-        self.LOG_EXC = True
         self.DEBUG = True
 
         if hasattr(django_settings, 'DB_HELPER'):

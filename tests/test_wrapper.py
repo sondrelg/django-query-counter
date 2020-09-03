@@ -1,5 +1,6 @@
 from inspect import getframeinfo, stack
 from pathlib import Path
+from random import randint
 
 from tests.base import TestingBaseClass
 
@@ -21,8 +22,7 @@ class TestWrapper(TestingBaseClass):
         """
         Test that an n+1 error is caught and error is raised.
         """
-        self.call(5)
-        self.assertEqual(read_comment(), 'function ran 18 queries')
-
-        self.call(1)
-        self.assertEqual(read_comment(), 'function ran 14 queries')
+        for _ in range(5):
+            number = randint(0, 100)
+            self.call(number)
+            self.assertEqual(read_comment(), f'function ran {13 + number} queries')

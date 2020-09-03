@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "django-qc"
-version = "0.2.2"
+version = "1.0.0"
 description = "DB utility to help you catch query inefficiencies in Django."
 authors = ["Sondre Lillebø Gundersen <sondrelg@live.no>"]
-readme = "docs/PYPI_README.rst"
+readme = "README.md"
 homepage = "https://github.com/sondrelg/django-query-counter"
 license = "bsd-2-clause"
-keywords = ["django", "database", "query", "n+1"]
+keywords = ["django", "database", "query", "n+1", "orm"]
 classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

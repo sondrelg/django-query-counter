@@ -7,4 +7,4 @@ class CD(models.Model):
 
 class Song(models.Model):
     name = models.CharField(max_length=50)
-    cd = models.ForeignKey(CD, on_delete=models.CASCADE, blank=False, null=False)
+    cd = models.ForeignKey(CD, on_delete=models.CASCADE, blank=False, null=False, related_name='song')

@@ -121,7 +121,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DB_HELPER = {
-    'RAISE_EXC': True,
-    'LOG_EXC': True,
     'DEBUG': DEBUG
 }
