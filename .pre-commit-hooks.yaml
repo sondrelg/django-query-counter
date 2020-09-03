@@ -1,7 +1,7 @@
 -   id: remove-query-counts
     name: Remove query count comments
     description: Removes any query count comments, before commiting them to version control.
-    entry: hook
+    entry: remove-query-counts
     language: python
     types: [text]
     stages: [commit]
