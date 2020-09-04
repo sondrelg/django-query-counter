@@ -33,7 +33,7 @@ def db_helper(verbose: bool = False):
         # Get the original line, minus any existing comments and newlines
         original_comment = ''
         try:
-            if len(content[wrapper_line_number].split('  # ')) != 0:
+            if '#' in content[wrapper_line_number] and len(content[wrapper_line_number].split('  # ')) != 0:
                 original_comment = content[wrapper_line_number].split('  # ')[1].replace('\n', '').strip()
         except Exception as e:
             logger.debug('Failed setting original comment. Error: %s', e)
