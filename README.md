@@ -19,6 +19,18 @@ Install using pip:
 
     pip install django-qc
 
+## Usage
+
+Simply import the db_helper wrapper and pass `verbose=True` if you want more details than in the default setting.
+
+```python
+from django_qc import db_helper
+
+@db_helper(verbose=True)
+def my_function():
+    ...
+```
+
 ## Settings
 
 There's only one setting to configure, but it is required:
