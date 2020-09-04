@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-qc"
-version = "1.0.0"
+version = "1.0.1"
 description = "DB utility to help you catch query inefficiencies in Django."
 authors = ["Sondre Lillebø Gundersen <sondrelg@live.no>"]
 readme = "README.md"
